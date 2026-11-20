@@ -19,7 +19,12 @@ Describe 'Test-ADInfrastructure' {
         Mock Get-Module { [pscustomobject]@{ Name = 'ActiveDirectory' } } -ParameterFilter { $ListAvailable -and $Name -eq 'ActiveDirectory' }
         Mock Import-Module { }
         Mock Get-ADDomain { [pscustomobject]@{ DNSRoot = 'alptech.local' } }
-        Mock Get-ADOrganizationalUnit { [pscustomobject]@{ DistinguishedName = $Identity } }
+        Mock Get-ADOrganizationalUnit {
+            if ($Identity -eq 'OU=missing,DC=alptech,DC=local') {
+                throw 'OU not found'
+            }
+            [pscustomobject]@{ DistinguishedName = $Identity }
+        }
     }
 
     It 'returns PASS when DNS, ports, domain and configured OUs are available' {
@@ -38,7 +43,6 @@ Describe 'Test-ADInfrastructure' {
     }
 
     It 'reports missing OUs without stopping the remaining checks' {
-        Mock Get-ADOrganizationalUnit { throw 'OU not found' } -ParameterFilter { $Identity -eq 'OU=missing,DC=alptech,DC=local' }
         $result = Test-ADInfrastructure -Domain 'alptech.local' -DomainController 'dc01.alptech.local' -RequiredOUs @('OU=missing,DC=alptech,DC=local')
         ($result | Where-Object Check -like 'OU:*').Status | Should -Be 'FAIL'
         ($result | Where-Object Check -eq 'Active Directory Domain').Status | Should -Be 'PASS'
