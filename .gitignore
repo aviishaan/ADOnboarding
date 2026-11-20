@@ -6,3 +6,5 @@ passwords.csv
 Thumbs.db
 *.bak
 .vscode/
+
+infrastructure-report.csv

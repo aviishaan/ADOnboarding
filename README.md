@@ -43,14 +43,30 @@ Anna,Muster,IT,Systemadministratorin
 
 `Department` muss einer vorhandenen OU unterhalb von `BaseOU` entsprechen (z. B. `OU=IT,OU=user,...`).
 
+## Infrastructure Validation
+
+`InfrastructureValidation.ps1` adds a read-only `Test-ADInfrastructure` function. It checks host DNS resolution, the domain controller LDAP SRV record, configurable TCP ports (LDAP 389, Kerberos 88 and SMB 445 by default), the ActiveDirectory PowerShell module, domain connectivity, and caller-supplied OU distinguished names. Results can be exported to CSV. The script does not create, modify, or delete Active Directory objects.
+
+Example (replace the DC FQDN with the hostname used in your lab):
+
+```powershell
+. .\InfrastructureValidation.ps1
+$requiredOUs = @(
+    'OU=user,DC=alptech,DC=local',
+    'OU=group,DC=alptech,DC=local'
+)
+Test-ADInfrastructure -Domain 'alptech.local' -DomainController 'dc01.alptech.local' -RequiredOUs $requiredOUs -ReportPath '.\infrastructure-report.csv'
+```
+
+Run the dedicated tests with `Invoke-Pester -Path .\Tests\Infrastructure.Tests.ps1 -Output Detailed`. TCP checks confirm port reachability only; they do not validate the complete LDAP, Kerberos, or SMB protocol.
+
 ## Tests
 
 ```powershell
-Invoke-Pester -Path .\Tests -Output Detailed
+Invoke-Pester -Path .\ADOnboarding.Tests.ps1, .\Tests\Infrastructure.Tests.ps1 -Output Detailed
 ```
 
-Die Pester-Tests mocken die AD-Cmdlets. Sie verändern das echte Active Directory nicht.
-Zuletzt ausgeführt mit Pester 6.2.0: 13 Tests bestanden, 0 fehlgeschlagen.
+Die Tests mocken AD-Cmdlets und ändern das echte Active Directory nicht. Die ursprünglichen Onboarding-Tests wurden zuletzt mit Pester 6.2.0 (13 Tests) ausgeführt. Die neue Infrastructure-Validation-Testsuite wurde in diesem Branch noch nicht auf einem Windows-System ausgeführt und muss vor dem Merge validiert werden.
 
 ### Testfälle
 
