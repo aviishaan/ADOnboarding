@@ -2,7 +2,12 @@
 # Read-only Active Directory infrastructure checks.
 # Compatible with Windows PowerShell 5.1.
 
-function Resolve-ADHostAddress {\n    param([Parameter(Mandatory)][string]$ComputerName)\n    [System.Net.Dns]::GetHostEntry($ComputerName)\n}\n\nfunction Test-ADInfrastructure {
+function Resolve-ADHostAddress {
+    param([Parameter(Mandatory)][string]$ComputerName)
+    [System.Net.Dns]::GetHostEntry($ComputerName)
+}
+
+function Test-ADInfrastructure {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
