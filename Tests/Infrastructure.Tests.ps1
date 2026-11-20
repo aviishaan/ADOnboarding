@@ -3,6 +3,8 @@
 
 BeforeAll {
     . (Join-Path $PSScriptRoot '..\InfrastructureValidation.ps1')
+    function Get-ADDomain { }
+    function Get-ADOrganizationalUnit { }
 }
 
 Describe 'Test-ADInfrastructure' {
