@@ -95,7 +95,8 @@ function Test-ADInfrastructure {
         }
     }
 
-    $output = @($results)
+    # Convert the generic List explicitly for Windows PowerShell 5.1 compatibility.
+    $output = $results.ToArray()
     if ($ReportPath) {
         $output | Export-Csv -Path $ReportPath -NoTypeInformation -Encoding UTF8
     }
