@@ -66,8 +66,7 @@ Run the dedicated tests with `Invoke-Pester -Path .\Tests\Infrastructure.Tests.p
 Invoke-Pester -Path .\ADOnboarding.Tests.ps1, .\Tests\Infrastructure.Tests.ps1 -Output Detailed
 ```
 
-Die Pester-Tests mocken die AD-Cmdlets. Sie verändern das echte Active Directory nicht.
-Zuletzt ausgeführt mit Pester 6.2.0: 13 Tests bestanden, 0 fehlgeschlagen.
+Die Tests mocken AD-Cmdlets und ändern das echte Active Directory nicht. Die ursprünglichen Onboarding-Tests wurden zuletzt mit Pester 6.2.0 (13 Tests) ausgeführt. Die neue Infrastructure-Validation-Testsuite wurde in diesem Branch noch nicht auf einem Windows-System ausgeführt und muss vor dem Merge validiert werden.
 
 ### Testfälle
 
