@@ -1,0 +1,10 @@
+# Niemals ins Repository: Passwoerter und Logs
+passwords.csv
+*.log
+
+# Windows / Editor
+Thumbs.db
+*.bak
+.vscode/
+
+infrastructure-report.csv
