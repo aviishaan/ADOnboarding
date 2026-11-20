@@ -2,7 +2,7 @@
 # Read-only Active Directory infrastructure checks.
 # Compatible with Windows PowerShell 5.1.
 
-function Test-ADInfrastructure {
+function Resolve-ADHostAddress {\n    param([Parameter(Mandatory)][string]$ComputerName)\n    [System.Net.Dns]::GetHostEntry($ComputerName)\n}\n\nfunction Test-ADInfrastructure {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -33,7 +33,7 @@ function Test-ADInfrastructure {
 
     # DNS A/host resolution
     try {
-        $resolved = [System.Net.Dns]::GetHostEntry($target)
+        $resolved = Resolve-ADHostAddress -ComputerName $target
         Add-ValidationResult -Check 'DNS Resolution' -Passed ($null -ne $resolved.AddressList -and $resolved.AddressList.Count -gt 0) -Details ("Resolved {0}" -f $target)
     }
     catch {
